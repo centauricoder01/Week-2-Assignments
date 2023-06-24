@@ -38,14 +38,13 @@ const uniqueId = uuid.v4();
 
 // write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
 
-
 app.get("/", (req, res) => {
   res.send("Yes this is Home page Get Request");
 });
 
-
 const users = [];
 
+// Signup Part start from here
 app.post("/signup", (req, res) => {
   const { username, password, firstname, lastname } = req.body;
 
@@ -73,6 +72,41 @@ app.post("/signup", (req, res) => {
     users.push(addUser);
 
     res.status(200).send("User added");
+  }
+});
+
+// Login part start from here
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].username === username && users[i].password === password) {
+      res.status(200).send({
+        status: "login Successfull",
+        Token: "234@#$@#$5@32423^#$@#$@&$$#&34534%#%#@#&*$%^$#%@#6",
+      });
+    }
+  }
+
+  res.status(400).send({ status: "Incorrect Crediential" });
+});
+
+// GET ALL THE USER FROM THE SERVER
+app.get("/data", (req, res) => {
+  const username = req.headers["username"];
+  const password = req.headers["password"];
+
+  if (username && password) {
+
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username === username && users[i].password === password) {
+        return res.status(200).send(JSON.stringify(users));
+      }
+    }
+
+    return res.status(400).send("You are Not Authorized in the for loop");
+  } else {
+    res.status(400).send("You are Not Authorized in the outer side only.");
   }
 });
 
